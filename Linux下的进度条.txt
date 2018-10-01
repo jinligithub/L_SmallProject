@@ -1,0 +1,55 @@
+1.’\r’和‘\n’的区别
+	* 
+\r：表示回车：它只会回到这一行的最前边
+	* 
+\n：表示回车换行。它会回到这一行的最前边，然后跳到下一行  。
+
+
+2.缓冲区
+	* 
+c函数如printf()，在输出时，shell默认将数据输出到标准输出如显示器，而printf()在输出时并不是将信息直接打印到屏幕上，而是先将信息信息放在缓冲区中，该缓冲区是按行刷新。
+	* 
+强制刷新fflush()函数。
+
+
+3.如何定义makefile
+	* 
+第一行：依赖关系
+	* 
+第二行：依赖方法，必须以Tab键开头（-o 表示输出到<文件>里去）
+	* 
+被  .PHONY:  修饰，表示伪目标。他总是被执行的。
+
+
+进度条
+
+1.makefile文件
+        gcc -o proc proc.c
+.PHONY:clean
+clean:
+        rm -f proc
+
+2.proc.c的源代码文件
+
+#include<stdio.h>
+#include<unistd.h>
+int main()
+{
+        char bar[102]={'\0'};//创建一个数组并初始化为0
+        int i=0;
+        const char *lable={"|/-\\"};//定义一个字符数组，里面按顺时针方向放旋转的字符
+        while(i<=100)
+{
+        bar[i]='#';
+        printf("[%-100s][%d%%][%c]\r",bar,i,lable[i%4]);//输出数组里的内容 ，以及百分比，和旋转进度条
+        fflush(stdout);//强制刷新
+        i++;
+        usleep(50000);//睡眠0.5秒
+}
+        printf("\n");
+        return 0;
+}
+
+
+
+
